@@ -1,16 +1,21 @@
 package com.solara.qrscanner.ui.viewmodel
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solara.core.onError
 import com.solara.core.onSuccess
 import com.solara.core.utils.QrCodeGenerator
+import com.solara.domain.model.Seed
 import com.solara.domain.model.SeedError
 import com.solara.domain.usecases.GenerateSeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,29 +26,80 @@ internal class CreateQRViewModel @Inject constructor(
     private val qrCodeGenerator: QrCodeGenerator,
     private val generateSeedUseCase: GenerateSeedUseCase,
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "CreateQRViewModel"
+        private const val BITMAP_SIZE = 500
+        private const val COUNTDOWN_INTERVAL_MS = 1000L
+    }
+
     private val _uiState = MutableStateFlow<CreateQRUiState>(CreateQRUiState.Loading)
-    val uiState: StateFlow<CreateQRUiState> = _uiState
+    val uiState: StateFlow<CreateQRUiState> = _uiState.asStateFlow()
+
+    private var countdownJob: Job? = null
 
     fun generateNewSeed() {
         viewModelScope.launch {
-            generateSeedUseCase.invoke().onSuccess { seed ->
-                val image = qrCodeGenerator.generate(seed.value, 500)
+            generateSeedUseCase()
+                .onSuccess { seed -> handleSeedSuccess(seed) }
+                .onError { error -> handleError(error) }
+        }
+    }
 
-                if (image != null) {
-                    _uiState.value =
-                        CreateQRUiState.Success(image, seed.value, seed.getSecondsRemaining())
+    private fun handleSeedSuccess(seed: Seed) {
+        val image = qrCodeGenerator.generate(seed.value, BITMAP_SIZE)
 
-                } else {
-                    _uiState.value =
-                        CreateQRUiState.Error(stringMapper.mapErrorString(SeedError.InvalidQRGeneration))
-                }
-            }.onError { error ->
-                val message = stringMapper.mapErrorString(error)
-                _uiState.value = CreateQRUiState.Error(message)
+        if (image == null) {
+            _uiState.value = CreateQRUiState.Error(
+                stringMapper.mapErrorString(SeedError.InvalidQRGeneration)
+            )
+            return
+        }
+
+        val expiresIn = seed.getSecondsRemaining()
+
+        _uiState.value = CreateQRUiState.Success(
+            qrImage = image,
+            qrValue = seed.value,
+            expiresInSeconds = expiresIn
+        )
+
+        startCountdown(expiresIn)
+    }
+
+    private fun handleError(error: SeedError) {
+        _uiState.value = CreateQRUiState.Error(
+            stringMapper.mapErrorString(error)
+        )
+    }
+
+    private fun startCountdown(duration: Int) {
+        countdownJob?.cancel()
+
+        if (duration <= 0) {
+            Log.w(TAG, "Countdown not started - expired")
+            return
+        }
+
+        countdownJob = viewModelScope.launch {
+            for (remaining in duration downTo 1) {
+                delay(COUNTDOWN_INTERVAL_MS)
+                updateRemainingTime(remaining - 1)
             }
         }
     }
 
+    private fun updateRemainingTime(remaining: Int) {
+        val currentState = _uiState.value
+        if (currentState is CreateQRUiState.Success) {
+            _uiState.value = currentState.copy(expiresInSeconds = remaining)
+        }
+    }
+
+    override fun onCleared() {
+        countdownJob?.cancel()
+        super.onCleared()
+    }
 }
 
 sealed interface CreateQRUiState {

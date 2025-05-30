@@ -11,6 +11,8 @@
     <string name="invalid_qr_generation">There was a problem generating the QR. Please try again.</string>
     <string name="error_title">Unexpected Error</string>
     <string name="new_qr_seed">New QR Seed Generated: %s</string>
-
+    <string name="expires_in">Expires in: %d s…</string>
+    <string name="expired_qr">"- Expired - "</string>
+    <string name="qr_code_description">QR Generated</string>
 
 </resources>
