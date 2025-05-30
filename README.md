@@ -3,9 +3,17 @@
 This project was built as part of the Superformula Mobile Developer Coding Challenge.
 This tool allows you to generate a QR code with an expiration time and later scan it to verify whether it’s still active or has expired.
 
-https://github.com/user-attachments/assets/75d513d1-46a4-4fc4-baeb-a6131e889036 
 
-https://github.com/user-attachments/assets/29f73752-3e50-4784-970e-b1202ecf24e6 
+
+
+https://github.com/user-attachments/assets/68551b6b-f073-41be-94c6-4fa87dd0b042
+
+
+
+https://github.com/user-attachments/assets/8668329d-c2c0-427b-9908-d8b759f9031e
+
+
+
 
 
 It includes:
