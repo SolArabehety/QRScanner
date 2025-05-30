@@ -5,10 +5,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
 
-const SEED_EXPIRATION_MS = 5 * 60 * 1000; // 5 minutos
+const SEED_EXPIRATION_MS = 5 * 60 * 1000; // 5 minutes
 const seeds = new Map(); // key: seed, value: { expiresAt, expired }
 
-// Cleanup loop que marca seeds como expiradas
+
 setInterval(() => {
   const now = Date.now();
   for (const [key, value] of seeds.entries()) {
@@ -23,7 +23,6 @@ function generateSeed() {
   return crypto.randomBytes(16).toString('hex');
 }
 
-// Endpoint para crear una nueva seed
 app.post('/seed', (req, res) => {
   const value = generateSeed();
   const expiresAt = Date.now() + SEED_EXPIRATION_MS;
@@ -35,7 +34,7 @@ app.post('/seed', (req, res) => {
   });
 });
 
-// Endpoint para validar una seed
+
 app.post('/validate', (req, res) => {
   const seed = req.query.seed || req.body.seed;
   const seedData = seeds.get(seed);
@@ -51,7 +50,7 @@ app.post('/validate', (req, res) => {
   res.json({ valid: true });
 });
 
-// Arranque del servidor
+
 app.listen(port, '0.0.0.0', () => {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`Server running at http://localhost:${port}`);
