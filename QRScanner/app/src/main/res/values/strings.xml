@@ -14,5 +14,6 @@
     <string name="expires_in">Expires in: %d s…</string>
     <string name="expired_qr">"- Expired - "</string>
     <string name="qr_code_description">QR Generated</string>
+    <string name="back">Back</string>
 
 </resources>
