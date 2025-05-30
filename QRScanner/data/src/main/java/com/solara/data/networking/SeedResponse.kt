@@ -7,6 +7,12 @@ import kotlinx.serialization.Serializable
 
 import java.util.Date
 
+/**
+ * DTO for the seed response returned by the API.
+ *
+ * @property seed Raw seed string.
+ * @property expiredDate UTC expiration date.
+ */
 @Serializable
 data class SeedResponse(
     @SerialName("seed")
@@ -17,6 +23,9 @@ data class SeedResponse(
     val expiredDate: Date,
 ) {
 
+    /**
+     * Maps [SeedResponse] to domain [Seed] model.
+     */
     fun toModel() = Seed(
         value = seed,
         expiredDate = expiredDate

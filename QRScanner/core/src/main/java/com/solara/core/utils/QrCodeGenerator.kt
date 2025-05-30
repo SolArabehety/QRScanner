@@ -7,7 +7,21 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import javax.inject.Inject
 
+/**
+ * Generates QR codes from a given string.
+ *
+ * This class uses ZXing's [QRCodeWriter] to create a [Bitmap] QR code.
+ * It can be injected using Hilt.
+ */
 class QrCodeGenerator @Inject constructor() {
+
+    /**
+     * Generates a QR code [Bitmap] from the given [data] and [size].
+     *
+     * @param data Text to encode in the QR code.
+     * @param size Width and height in pixels.
+     * @return A [Bitmap] with the QR code, or `null` if an error occurs.
+     */
     fun generate(data: String, size: Int): Bitmap? {
         return try {
             val writer = QRCodeWriter()

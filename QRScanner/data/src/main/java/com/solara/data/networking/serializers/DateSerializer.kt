@@ -6,6 +6,11 @@ import kotlinx.serialization.encoding.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Custom Kotlinx serializer for java.util.Date
+ *
+ * Format: `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`
+ */
 object DateSerializer : KSerializer<Date> {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
         timeZone = TimeZone.getTimeZone("UTC")
