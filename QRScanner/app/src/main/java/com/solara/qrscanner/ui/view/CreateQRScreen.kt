@@ -166,7 +166,7 @@ private fun ErrorScreen(message: String) {
 @Preview(showBackground = true)
 //@MultiDevicePreview
 @Composable
-fun PreviewMainScreenContentSuccess() {
+fun PreviewCreateQRScreenContentSuccess() {
     CreateQRScreenInternal(
         CreateQRUiState.Success(
             createBitmap(500, 500), "Sample QR Value", 4
@@ -176,13 +176,13 @@ fun PreviewMainScreenContentSuccess() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMainScreenContentError() {
+fun PreviewCreateQRScreenContentError() {
     CreateQRScreenInternal(CreateQRUiState.Error("Error message"))
 }
 
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMainScreenContentLoading() {
+fun PreviewCreateQRScreenContentLoading() {
     CreateQRScreenInternal(CreateQRUiState.Loading)
 }

@@ -15,5 +15,9 @@
     <string name="expired_qr">"- Expired - "</string>
     <string name="qr_code_description">QR Generated</string>
     <string name="back">Back</string>
+    <string name="qr_valid">This QR is valid!</string>
+    <string name="qr_invalid">This QR has expired :(</string>
+    <string name="permission_denied">Camera permission was permanently denied.</string>
+    <string name="permission_requesting">Requesting camera permission...</string>
 
 </resources>

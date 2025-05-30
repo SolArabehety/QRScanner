@@ -6,14 +6,32 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -60,24 +79,36 @@ internal fun ScanQRScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (!cameraPermissionState.status.isGranted) {
-            PermissionMessage(permissionState = cameraPermissionState)
-        }
-
-        when (uiState) {
-            is ScanQRUiState.Scan -> {
-                if (cameraPermissionState.status.isGranted) {
-                    CameraView(onBarcodeScanned = { scannedValue ->
-                        viewModel.validateQRValue(scannedValue)
-                    })
-                } else {
-                    PermissionMessage(permissionState = cameraPermissionState)
-                }
+        when {
+            !cameraPermissionState.status.isGranted -> {
+                PermissionMessage(permissionState = cameraPermissionState)
             }
 
-            is ScanQRUiState.Loading -> LoadingScreen()
-            is ScanQRUiState.Error -> ErrorScreen("error")
-            is ScanQRUiState.Success -> SuccessMessage(true)
+            else -> {
+                AnimatedContent(
+                    targetState = uiState,
+                ) { state ->
+                    when (state) {
+                        is ScanQRUiState.Scan -> {
+                            CameraView(onBarcodeScanned = { scannedValue ->
+                                viewModel.validateQRValue(scannedValue)
+                            })
+                        }
+
+                        is ScanQRUiState.Loading -> {
+                            LoadingScreen()
+                        }
+
+                        is ScanQRUiState.Error -> {
+                            ErrorScreen(message = state.message)
+                        }
+
+                        is ScanQRUiState.Success -> {
+                            SuccessMessage(isValid = state.isValid)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -85,16 +116,20 @@ internal fun ScanQRScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun PermissionMessage(permissionState: PermissionState) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        when {
-            permissionState.status.shouldShowRationale -> {
-                Text("Camera permission was permanently denied.")
-            }
+    val message = if (permissionState.status.shouldShowRationale) {
+        stringResource(R.string.permission_denied)
+    } else {
+        stringResource(R.string.permission_requesting)
+    }
 
-            else -> {
-                Text("Requesting camera permission...")
-            }
-        }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
@@ -182,14 +217,65 @@ private fun ErrorScreen(message: String) {
 }
 
 @Composable
-private fun SuccessMessage(isValid: Boolean) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-        Text(
-            text = "QR Code validation result: $isValid",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(16.dp),
-            color = MaterialTheme.colorScheme.primary
-        )
+fun SuccessMessage(isValid: Boolean) {
+    val backgroundColor = if (isValid) {
+        MaterialTheme.colorScheme.surfaceVariant
+    } else {
+        MaterialTheme.colorScheme.errorContainer
+    }
+
+    val contentColor = if (isValid) {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    } else {
+        MaterialTheme.colorScheme.onErrorContainer
+    }
+
+    val icon = if (isValid) Icons.Default.CheckCircle else Icons.Default.Clear
+    val message = if (isValid) {
+        stringResource(R.string.qr_valid)
+    } else {
+        stringResource(R.string.qr_invalid)
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = backgroundColor)
+            .padding(top = 32.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = contentColor
+            )
+        }
+
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewScanQRSuccess() {
+    SuccessMessage(isValid = true)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewScanQRSuccessFalse() {
+    SuccessMessage(isValid = false)
+}
