@@ -10,10 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.solara.qrscanner.ui.viewmodel.ScanQRViewModel
 
 
 @Composable
-internal fun ScanQRScreen() {
+internal fun ScanQRScreen(
+    viewModel : ScanQRViewModel
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -28,5 +31,5 @@ internal fun ScanQRScreen() {
 @Preview
 @Composable
 fun ScanQRScreenPreview() {
-    ScanQRScreen()
+
 }
