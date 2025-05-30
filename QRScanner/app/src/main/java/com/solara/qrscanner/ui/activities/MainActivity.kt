@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
                                         text = stringResource(id = R.string.app_name),
                                         fontFamily = lobsterFamily,
                                         textAlign = TextAlign.Center,
+                                        color = Color.White,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 },

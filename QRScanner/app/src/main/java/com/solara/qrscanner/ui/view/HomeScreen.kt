@@ -80,8 +80,7 @@ fun HomeScreenInternal(padding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
-            .padding(24.dp),
+            .padding(padding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
