@@ -23,7 +23,7 @@ internal class CreateQRViewModel @Inject constructor(
     fun generateNewSeed() {
         viewModelScope.launch {
             generateSeedUseCase.invoke().onSuccess { seed ->
-                _uiState.value = CreateQRUiState.Success(seed)
+                _uiState.value = CreateQRUiState.Success(seed.value)
             }.onError { error ->
                 _uiState.value = CreateQRUiState.Error(error)
             }

@@ -3,6 +3,8 @@ package com.solara.data.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.solara.data.networking.ApiService
 import com.solara.data.networking.serializers.DateSerializer
+import com.solara.data.repositories.QRRepositoryImpl
+import com.solara.domain.repositories.QRRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +43,12 @@ internal class DataHiltModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
+
+    @Provides
+    @Singleton
+    fun providesQRRepository(apiService: ApiService): QRRepository =
+        QRRepositoryImpl(
+            apiService = apiService,
+        )
 
 }
