@@ -35,4 +35,9 @@ internal class QRRepositoryImpl(
         }
     }
 
+
+    override suspend fun validateSeed(value: String): Boolean {
+        return true
+    }
+
 }

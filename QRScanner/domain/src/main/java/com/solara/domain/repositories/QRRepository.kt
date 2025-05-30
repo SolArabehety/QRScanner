@@ -11,6 +11,11 @@ interface QRRepository {
      * Fetches a new [Seed] from the backend.
      */
     suspend fun getNewSeed(): Seed
+
+    /**
+     * Validates if the code is expired or not.
+     */
+    suspend fun validateSeed(value: String): Boolean
 }
 
 /**

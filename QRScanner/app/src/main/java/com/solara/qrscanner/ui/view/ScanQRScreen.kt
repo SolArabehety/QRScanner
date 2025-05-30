@@ -68,12 +68,13 @@ internal fun ScanQRScreen(
             is ScanQRUiState.Scan -> {
                 if (cameraPermissionState.status.isGranted) {
                     CameraView(onBarcodeScanned = { scannedValue ->
-                        Log.i("ScanQRScreen", "Scanned value: $scannedValue")
+                        viewModel.validateQRValue(scannedValue)
                     })
                 } else {
                     PermissionMessage(permissionState = cameraPermissionState)
                 }
             }
+
             is ScanQRUiState.Loading -> LoadingScreen()
             is ScanQRUiState.Error -> ErrorScreen("error")
             is ScanQRUiState.Success -> SuccessMessage(true)
@@ -89,6 +90,7 @@ private fun PermissionMessage(permissionState: PermissionState) {
             permissionState.status.shouldShowRationale -> {
                 Text("Camera permission was permanently denied.")
             }
+
             else -> {
                 Text("Requesting camera permission...")
             }
