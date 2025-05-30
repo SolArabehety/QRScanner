@@ -6,6 +6,7 @@ import com.solara.core.onError
 import com.solara.core.onSuccess
 import com.solara.domain.usecases.ValidateSeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,12 +19,6 @@ internal class ScanQRViewModel @Inject constructor(
     private val stringMapper: StringMapper,
     private val validateSeedUseCase: ValidateSeedUseCase,
 ) : ViewModel() {
-
-    companion object {
-        private const val TAG = "ScanQRViewModel"
-
-    }
-
     private val _uiState = MutableStateFlow<ScanQRUiState>(ScanQRUiState.Scan)
     val uiState: StateFlow<ScanQRUiState> = _uiState.asStateFlow()
 

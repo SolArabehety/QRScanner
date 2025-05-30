@@ -3,6 +3,11 @@ accompanistPermissions = "0.37.3"
 agp = "8.10.1"
 barcodeScanning = "17.3.0"
 cameraCamera2 = "1.4.2"
+junitJupiter = "5.12.2"
+kotlinxCoroutinesTest = "1.8.0"
+mockk = "1.13.10"
+mockkVersion = "1.13.9"
+turbine = "1.1.0"
 zxing = "3.4.1"
 kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
@@ -30,6 +35,10 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

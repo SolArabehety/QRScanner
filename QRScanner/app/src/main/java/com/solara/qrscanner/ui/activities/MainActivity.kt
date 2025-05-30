@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,49 +40,23 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-
             QRScannerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Scaffold(
-                        topBar = {
-                            CenterAlignedTopAppBar(
-                                title = {
-                                    Text(
-                                        text = stringResource(id = R.string.app_name),
-                                        fontFamily = lobsterFamily,
-                                        textAlign = TextAlign.Center,
-                                        color = Color.White,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                },
-                                navigationIcon = {
-                                    if (currentRoute != MainPaths.START_DESTINATION) {
-                                        IconButton(onClick = { navController.navigateUp() }) {
-                                            Icon(
-                                                imageVector = Icons.Default.ArrowBack,
-                                                contentDescription = stringResource(R.string.back)
-                                            )
-                                        }
-                                    }
-                                },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.primary
-                                )
-                            )
-                        },
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
 
-                        ) { paddingValues ->
+                Scaffold(
+                    topBar = {
+                        AppTopBar(
+                            currentRoute = currentRoute,
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    },
+                    content = { paddingValues ->
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -90,10 +65,40 @@ class MainActivity : ComponentActivity() {
                             AppNavGraph(navController = navController)
                         }
                     }
-
-                }
+                )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppTopBar(
+    currentRoute: String?,
+    onBackClick: () -> Unit
+) {
+    CenterAlignedTopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.titleLarge,
+                fontFamily = lobsterFamily,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        },
+        navigationIcon = {
+            if (currentRoute != MainPaths.START_DESTINATION) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    )
+}

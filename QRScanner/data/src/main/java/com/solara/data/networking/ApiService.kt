@@ -5,7 +5,6 @@ import com.solara.data.networking.responses.SeedResponse
 import com.solara.data.networking.responses.ValidateSeedResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 
 /**

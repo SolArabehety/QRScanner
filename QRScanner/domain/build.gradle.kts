@@ -43,8 +43,11 @@ dependencies {
     implementation(libs.di)
     implementation(libs.diCompose)
     ksp(libs.diCompiler)
-
+    testImplementation(libs.mockk)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.junit)
+
+
 }
