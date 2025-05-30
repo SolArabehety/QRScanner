@@ -18,10 +18,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.compose.rememberNavController
 import com.solara.qrscanner.R
+import com.solara.qrscanner.ui.navigation.AppNavGraph
 import com.solara.qrscanner.ui.theme.QRScannerTheme
 import com.solara.qrscanner.ui.theme.lobsterFamily
-import com.solara.qrscanner.ui.view.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,9 +30,10 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
+
             QRScannerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(paddingValues)
                         ) {
-                            HomeScreen()
+                            AppNavGraph(navController = navController)
                         }
                     }
 
