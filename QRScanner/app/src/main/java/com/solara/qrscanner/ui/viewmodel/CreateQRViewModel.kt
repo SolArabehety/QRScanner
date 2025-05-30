@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CreateQRViewModel @Inject constructor(
+    private val stringMapper: StringMapper,
     private val generateSeedUseCase: GenerateSeedUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<CreateQRUiState>(CreateQRUiState.Loading)
@@ -25,7 +26,8 @@ internal class CreateQRViewModel @Inject constructor(
             generateSeedUseCase.invoke().onSuccess { seed ->
                 _uiState.value = CreateQRUiState.Success(seed.value)
             }.onError { error ->
-                _uiState.value = CreateQRUiState.Error(error)
+                val message = stringMapper.mapErrorString(error)
+                _uiState.value = CreateQRUiState.Error(message)
             }
         }
 
