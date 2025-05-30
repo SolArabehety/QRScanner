@@ -14,9 +14,41 @@ It includes:
 - **MVVM** pattern with clean separation between UI, business logic, and data layers.
 - **Hilt** for dependency injection
 - **Jetpack Compose** for UI
-- **CameraX** for barcode scanning
+- **CameraX** for QR code scanning
 - **Coroutines + StateFlow** for reactive state handling
+- **Retrofit** for networking
 - **Custom Result wrapper** for error handling
+
+🧱 Simplified Class Tree
+
+````
+
+MainActivity
+└── NavHost (Start, CreateQR, ScanQR)
+
+UI
+├── StartScreen
+├── CreateQRScreen → SuccessScreen
+└── ScanQRScreen → CameraView → QRCodeAnalyzer
+
+ViewModels
+├── MainViewModel → GenerateSeedUseCase
+└── ScanQRViewModel → ValidateSeedUseCase
+
+UseCases
+├── GenerateSeedUseCase
+└── ValidateSeedUseCase
+
+Repository
+└── QRRepositoryImpl → ApiService (Retrofit)
+
+Model
+├── Seed
+└── SeedError (enum)
+
+````
+
+
 
 ### Features
 
@@ -30,7 +62,7 @@ It includes:
 1. Clone this repo
 2. Open the project in Android Studio Hedgehog or later
 3. Run the app on an emulator or physical device (Android 8+)
-4. Ensure your backend is deployed and reachable from the app
+4. The backend is hosted on Render and available publicly
 
 ### Requirements
 
