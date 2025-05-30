@@ -11,6 +11,9 @@ import retrofit2.http.POST
  * Defines API endpoints for seed-related operations.
  */
 interface ApiService {
+    companion object {
+        const val BASE_URL = "https://qrscanner-2amx.onrender.com"
+    }
 
     /**
      * Fetches a new seed from the backend.
