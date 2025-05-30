@@ -1,6 +1,11 @@
 package com.solara.data.networking
 
+import com.solara.data.networking.requests.ValidateSeedRequest
+import com.solara.data.networking.responses.SeedResponse
+import com.solara.data.networking.responses.ValidateSeedResponse
+import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 
 /**
@@ -15,5 +20,8 @@ interface ApiService {
      */
     @POST("seed")
     suspend fun getNewSeed(): SeedResponse
+
+    @POST("validate")
+    suspend fun validateSeed(@Body seed: ValidateSeedRequest): ValidateSeedResponse
 
 }

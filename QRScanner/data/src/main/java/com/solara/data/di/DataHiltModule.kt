@@ -33,7 +33,7 @@ internal class DataHiltModule {
     @Provides
     @Singleton
     fun provideRetrofit(json: Json): Retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:3000/")
+        .baseUrl("https://qrscanner-2amx.onrender.com")
         .addConverterFactory(
             json.asConverterFactory("application/json".toMediaType())
         )
