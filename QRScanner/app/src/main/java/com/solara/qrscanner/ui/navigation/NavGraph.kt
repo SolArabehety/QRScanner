@@ -1,6 +1,7 @@
 package com.solara.qrscanner.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +26,6 @@ fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = START_DESTINATION) {
         composable(HOME) { HomeScreen(navController) }
         composable(SCAN_QR) { ScanQRScreen() }
-        composable(CREATE_QR) { CreateQRScreen() }
+        composable(CREATE_QR) { CreateQRScreen(viewModel= hiltViewModel()) }
     }
 }

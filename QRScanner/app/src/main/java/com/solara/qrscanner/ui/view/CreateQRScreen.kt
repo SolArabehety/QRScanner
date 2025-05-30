@@ -1,32 +1,138 @@
 package com.solara.qrscanner.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
+import com.solara.qrscanner.R
+import com.solara.qrscanner.ui.viewmodel.CreateQRUiState
+import com.solara.qrscanner.ui.viewmodel.CreateQRViewModel
 
 @Composable
-internal fun CreateQRScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("CreateQRScreen", style = MaterialTheme.typography.headlineMedium)
+internal fun CreateQRScreen(
+    viewModel: CreateQRViewModel
+) {
+    val uiState = viewModel.uiState.collectAsState().value
+    CreateQRScreenInternal(uiState)
+
+    LaunchedEffect(Unit) {
+        viewModel.generateNewSeed()
     }
 }
 
 
-@Preview
 @Composable
-fun CreateQRScreenPreview() {
-    CreateQRScreen()
+private fun CreateQRScreenInternal(
+    uiState: CreateQRUiState,
+) {
+    when (uiState) {
+        is CreateQRUiState.Loading -> {
+            LoadingScreen()
+        }
+
+        is CreateQRUiState.Error -> {
+            ErrorScreen(uiState.message)
+        }
+
+        is CreateQRUiState.Success -> {
+            SuccessScreen(uiState.value)
+        }
+    }
+}
+
+
+@Composable
+private fun SuccessScreen(qrText: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.new_qr_seed, qrText),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+    }
+}
+
+@Composable
+private fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun ErrorScreen(message: String) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.il_error),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(180.dp)
+                    .aspectRatio(1f)
+            )
+            Text(
+                text = stringResource(R.string.error_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.tertiary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+//@MultiDevicePreview
+@Composable
+fun PreviewMainScreenContentSuccess() {
+    CreateQRScreenInternal(
+        CreateQRUiState.Success(
+            "Sample QR Value"
+        ),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMainScreenContentError() {
+    CreateQRScreenInternal(CreateQRUiState.Error("Error message"))
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMainScreenContentLoading() {
+    CreateQRScreenInternal(CreateQRUiState.Loading)
 }
