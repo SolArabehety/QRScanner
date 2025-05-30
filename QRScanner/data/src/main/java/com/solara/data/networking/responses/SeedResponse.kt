@@ -1,4 +1,4 @@
-package com.solara.data.networking
+package com.solara.data.networking.responses
 
 import com.solara.domain.model.Seed
 import com.solara.data.networking.serializers.DateSerializer

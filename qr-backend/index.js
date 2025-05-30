@@ -31,7 +31,7 @@ app.post('/seed', (req, res) => {
 
 // Endpoint to validate a seed
 app.post('/validate', (req, res) => {
-  const { seed } = req.body;
+  const { seed } = req.query;
   const expiration = seeds.get(seed);
 
   if (!expiration) {

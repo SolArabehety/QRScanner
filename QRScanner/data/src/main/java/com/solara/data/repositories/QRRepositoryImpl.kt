@@ -1,6 +1,7 @@
 package com.solara.data.repositories
 
 import com.solara.data.networking.ApiService
+import com.solara.data.networking.requests.ValidateSeedRequest
 import com.solara.domain.model.Seed
 import com.solara.domain.repositories.ConnectionErrorException
 import com.solara.domain.repositories.QRRepository
@@ -27,6 +28,21 @@ internal class QRRepositoryImpl(
         try {
             return apiService.getNewSeed().toModel()
         } catch (e: Exception) {
+            throw when (e) {
+                is IOException -> ConnectionErrorException("Connection error", e)
+                is HttpException -> SeedServerException("Server error", e)
+                else -> e
+            }
+        }
+    }
+
+
+    override suspend fun validateSeed(value: String): Boolean {
+        try {
+            return apiService.validateSeed(ValidateSeedRequest(value)).valid
+        } catch (e: Exception) {
+            e.printStackTrace()
+
             throw when (e) {
                 is IOException -> ConnectionErrorException("Connection error", e)
                 is HttpException -> SeedServerException("Server error", e)

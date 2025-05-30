@@ -25,7 +25,7 @@ object MainPaths {
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = START_DESTINATION) {
         composable(HOME) { HomeScreen(navController) }
-        composable(SCAN_QR) { ScanQRScreen() }
+        composable(SCAN_QR) { ScanQRScreen(viewModel= hiltViewModel()) }
         composable(CREATE_QR) { CreateQRScreen(viewModel= hiltViewModel()) }
     }
 }
