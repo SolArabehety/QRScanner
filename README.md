@@ -12,16 +12,34 @@ https://github.com/user-attachments/assets/68551b6b-f073-41be-94c6-4fa87dd0b042
 
 https://github.com/user-attachments/assets/8668329d-c2c0-427b-9908-d8b759f9031e
 
-
-
-
-
 It includes:
 
 - A backend service in Node.js to generate and validate QR seeds
 - A Kotlin Android app to generate, display, and scan QR codes
 
 ## 📱 Android App
+
+### Features
+
+- Generate a new QR code from a seed fetched from the backend
+- Automatically expires after 5 minutes
+- Scan QR codes and validate them against the backend
+- Clean UI with navigation across three screens
+
+### How to run
+
+1. Clone this repo
+2. Open the project in Android Studio Hedgehog or later
+3. Run the app on an emulator or physical device (Android 8+)
+4. The backend is hosted on Render and available publicly
+
+### Requirements
+
+- Android Studio Hedgehog
+- Android SDK 34
+- Gradle Plugin 8.11.1
+- Kotlin 1.9+
+
 
 ### Architecture
 
@@ -64,26 +82,6 @@ Model
 
 
 
-### Features
-
-- Generate a new QR code from a seed fetched from the backend
-- Automatically expires after 5 minutes
-- Scan QR codes and validate them against the backend
-- Clean UI with navigation across three screens
-
-### How to run
-
-1. Clone this repo
-2. Open the project in Android Studio Hedgehog or later
-3. Run the app on an emulator or physical device (Android 8+)
-4. The backend is hosted on Render and available publicly
-
-### Requirements
-
-- Android Studio Hedgehog
-- Android SDK 34
-- Gradle Plugin 8.3.1
-- Kotlin 1.9+
 
 ### 🧪 Testing
 Unit tests are included for key components
@@ -111,17 +109,21 @@ The backend is hosted on Render and available publicly.
 
 ```bash
 git clone https://github.com/SolArabehety/QRScanner
-cd backend
+cd qr-backend
 npm install
 npm start
 ```
 
 Then the server will be running at http://localhost:3000.
 
-API Endpoints
-curl -X POST http://localhost:3000/seed     
+For Android emulator:
+change the BASE_URL [here](QRScanner/data/src/main/java/com/solara/data/networking/ApiService.kt) to "http://10.0.2.2:3000"
 
-curl -X POST http://localhost:3000/validate 
+API Endpoints
+
+curl -X POST http://10.0.2.2:3000/seed     
+
+curl -X POST http://10.0.2.2:3000/validate 
   -H "Content-Type: application/json" \
   -d '{"seed": "exampleseed"}'
 
