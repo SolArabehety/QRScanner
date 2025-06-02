@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.VisibleForTesting
 import javax.inject.Inject
 
 
@@ -36,7 +37,21 @@ internal class CreateQRViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<CreateQRUiState>(CreateQRUiState.Loading)
     val uiState: StateFlow<CreateQRUiState> = _uiState.asStateFlow()
 
-    private var countdownJob: Job? = null
+    /**
+     * Represents the coroutine job that runs the countdown timer after a QR code is successfully generated.
+     *
+     * This property is marked with [VisibleForTesting] to allow unit tests to verify that
+     * the countdown has started without relying on time-based assertions or testing internal
+     * coroutine behavior, which would be fragile and tightly coupled to implementation details.
+     *
+     * Testing for job existence provides a lightweight and reliable way to assert that the timer
+     * logic was triggered, without introducing unnecessary complexity or exposing full timer state.
+     *
+     * ⚠️ This property must not be accessed or modified from production code.
+     */
+    @VisibleForTesting
+    internal var countdownJob: Job? = null
+        private set
 
     fun generateNewSeed() {
         viewModelScope.launch {
