@@ -33,6 +33,8 @@ google-services.json
 *.hprof
 
 .DS_Store
+/qr-backend/node_modules
+node_modules/
 
 # Fastlane
 fastlane/report.xml
